@@ -45,5 +45,5 @@ refreshControl!.footerState!.asObservable()
 ## End refreshing
       
 ```
-refreshControl?.finishRefreshing()
+refreshControl.finishRefreshing()
 ```
