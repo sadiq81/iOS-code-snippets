@@ -62,14 +62,6 @@ class UITableViewRefreshControl {
 
                 }).addDisposableTo(self.disposeBag)
 
-        //Snap table view to position when user lets go so that header refresh view is aligned
-//        self.tableView.rx.didEndDecelerating
-//                .subscribeOn(MainScheduler.instance)
-//                .subscribe(onNext: { [weak self] in
-//
-//                })
-//                .addDisposableTo(self.disposeBag)
-
         //Check if user dragged beyond pull to refresh before letting go
         self.tableView.rx.willEndDragging
                 .subscribeOn(MainScheduler.instance)
@@ -153,14 +145,18 @@ class UITableViewRefreshControl {
 
     fileprivate var footerOffset: CGFloat {
 
-        let contentHeight: CGFloat = self.tableView.contentSize.height + self.tableView.contentInset.top
-        let tableViewHeight: CGFloat = self.tableView.bounds.size.height
+        guard let footerView: RefreshView = self.footerView else {
+            return 0
+        }
 
-        if contentHeight < tableViewHeight {
+        let footerViewBottom: CGFloat = footerView.convert(footerView.hiddenView.bounds, to: nil).maxY
+        let tableViewBottom: CGFloat = self.tableView.convert(self.tableView.bounds, to: nil).maxY
 
-            let footerOffset = tableViewHeight - contentHeight + (RefreshView.height / 2)
+        if footerViewBottom < tableViewBottom {
 
+            let footerOffset = tableViewBottom - footerViewBottom
             return footerOffset
+
         } else {
             return 0
         }
